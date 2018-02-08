@@ -1,0 +1,5 @@
+# Ignore all images
+*.jpg
+
+# Ignoring all list files
+*.lst
