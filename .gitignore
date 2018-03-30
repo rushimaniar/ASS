@@ -3,3 +3,9 @@
 
 # Ignoring all list files
 *.lst
+
+# Ignoring YOLO files
+*.cfg
+*.data
+*.names
+*.weights
