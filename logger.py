@@ -1,6 +1,7 @@
 '''
 Logger for writing pretty shit to the terminal. We mean business yo.
 '''
+from time import strftime, gmtime
 
 '''
 Status can be Warning, Error, Info
@@ -8,6 +9,7 @@ Status can be Warning, Error, Info
 WARN = 'warn'
 ERROR = 'err'
 INFO = 'info'
+
 def log(status, text):
     RED = '\033[31;1m'
     YELLOW ='\033[33m' 
@@ -21,9 +23,4 @@ def log(status, text):
         print(CYAN + '[ INFO ]\t' + text + WHITE)
     else:
         print(text)
-
     return
-
-log(WARN, 'This is a warning')
-log(ERROR, 'This is an error')
-log(INFO, 'This is some information')

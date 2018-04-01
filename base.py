@@ -12,6 +12,7 @@ Left luggage ka baadme dekh lenge ab. Kuch nahi toh HAAR karenge. Else, we will 
 '''
 import darknet
 import cv2
+from logger import log, WARN, INFO, ERROR
 
 class Y_Classifier:
 
@@ -77,6 +78,7 @@ class Rule:
     def __init__(self, name, ruleset={}):
         self.RULE_NAME = name
         self.RULESET = ruleset
+        log(INFO, "Applying rule: " + self.RULE_NAME)
 
     def eval(self):
         # Write Evaluation logic

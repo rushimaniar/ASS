@@ -165,6 +165,10 @@ if __name__ == "__main__":
     # dog = load_image("data/horses.jpg", 0, 0)
     # r = classify(net, meta, dog)
     
-    for item in r:
-        # print str(item[0]) + '\t' + str(item[1])
-        print item
+    print r
+    f = open('lol.txt','w')
+    f.write(str(r))
+
+    # for item in r:
+    #     # print str(item[0]) + '\t' + str(item[1])
+    #     print item
