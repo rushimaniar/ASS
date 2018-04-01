@@ -3,7 +3,6 @@
 from ctypes import *
 import math
 import random
-import numpy as np
 
 _NET = []
 _META = []
@@ -120,15 +119,6 @@ predict_image = lib.network_predict_image
 predict_image.argtypes = [c_void_p, IMAGE]
 predict_image.restype = POINTER(c_float)
 
-def MarshalOCV2Yolo(frame):
-    img = frame.transpose(2, 0, 1)
-    c, h, w = img.shape[0], img.shape[1], img.shape[2]
-    nump_data = img.ravel() / 255.0
-    nump_data = np.ascontiguousarray(nump_data, dtype=np.float32)
-    ptr_data = nump_data.ctypes.data_as(POINTER(c_float))
-    return IMAGE(w=w, h=h, c=c, data=ptr_data)
-
-
 def classify(net, meta, im):
     out = predict_image(net, im)
     res = []
@@ -161,14 +151,3 @@ if __name__ == "__main__":
     net = load_net("cfg/yolov3.cfg", "yolov3.weights", 0)
     meta = load_meta("cfg/coco.data")
     r = detect(net, meta, "lol.jpg")
-
-    # dog = load_image("data/horses.jpg", 0, 0)
-    # r = classify(net, meta, dog)
-    
-    print r
-    f = open('lol.txt','w')
-    f.write(str(r))
-
-    # for item in r:
-    #     # print str(item[0]) + '\t' + str(item[1])
-    #     print item

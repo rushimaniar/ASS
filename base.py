@@ -23,13 +23,15 @@ class Y_Classifier:
         self.THRESH = THRESH
 
     def loadClassifier(self):
+        log(INFO, "Loading YOLO.")
         self.NET = darknet.load_net(self.NET_PATH, self.WEIGHTS_PATH, 0)
-        self.META = darknet.load_net(self.META_PATH)
+        self.META = darknet.load_meta(self.META_PATH)
+        log(INFO, "Loaded YOLO.")
         return
 
     def detect(self, frame):
-        # Frame should be loaded using darknet library
-        return darknet.classify(self.NET, self.META, frame)
+        im = darknet.load_image(frame, 0, 0)
+        return darknet.detect(self.NET, self.META, frame)
 
 
 class VideoReader:
@@ -63,12 +65,16 @@ class VideoReader:
     def next(self):
         # Invoke emitFrame with added SEEK
         # Check for frame out of index here, not in the emitFrame method.
+        #
+        # Okay! New pivot. Marshalling an opencv frame to YOLO is a pain so what we will be doing is taking a very inefficient approach :).
+        # This method will get the next pertinent frame and then instead of calling DN it wil save it in tmp directory.
+        # The frame will be retrieved by Y_Classifier object and classified and then deleted. Simple :).
         self.SEEK += self.INTERVAL
         if self.SEEK > self.FR_COUNT:
             return False
         else:
             frame = self._emitFrame(self.SEEK)
-
+            cv2.imsave()
         return frame
 
 
