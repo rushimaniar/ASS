@@ -1,5 +1,6 @@
-# Ignore all images
+# Ignore all images and videos
 *.jpg
+*.mp4
 
 # Ignoring all list files
 *.lst

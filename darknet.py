@@ -150,7 +150,7 @@ def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
 if __name__ == "__main__":
     net = load_net("cfg/yolov3.cfg", "yolov3.weights", 0)
     meta = load_meta("cfg/coco.data")
-    r = detect(net, meta, "data/nikki.jpg")
+    r = detect(net, meta, "lol.jpg")
 
     # dog = load_image("data/horses.jpg", 0, 0)
     # r = classify(net, meta, dog)
