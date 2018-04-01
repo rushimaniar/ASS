@@ -71,7 +71,7 @@ class VideoReader:
         return frame
 
 
-# Class has to be inherited and its methods are to be treated as interfaces for each rule
+# Base class for all rules
 class Rule:
 
     def __init__(self, name, ruleset={}):
@@ -80,13 +80,13 @@ class Rule:
 
     def eval(self):
         # Write Evaluation logic
-        return
+        pass
 
     def learn(self):
         # Write Learning logic
-        return
+        pass
 
-# Driver class
+# Driver class, one per camera. One thread per instance
 class ASurveillance:
 
     def __init__(self, name, capture, y_classifier, rule):
