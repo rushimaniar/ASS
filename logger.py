@@ -15,6 +15,7 @@ def log(status, text):
     YELLOW ='\033[33m' 
     CYAN = '\033[36m'
     WHITE = '\033[37;0m'
+    text = str(text)
     if status == 'err':
         print(RED + '[ ERROR ]\t' + text + WHITE)
     elif status == 'warn':

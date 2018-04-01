@@ -33,6 +33,7 @@ class Y_Classifier:
         return
 
     def detect(self, frame):
+        frame = 'tmp/' + frame
         im = darknet.load_image(frame, 0, 0)
         r = darknet.detect(self.NET, self.META, frame)
         os.remove(frame)
