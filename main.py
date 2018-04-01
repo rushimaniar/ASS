@@ -25,7 +25,7 @@ while True:
     if frame is False:
         break
     r = yolo_c.detect(frame)
-    # dataset.append(r)
+    dataset.append(r)
     mob.eval(r)
 
-# mob.learn(dataset)
+mob.learn(dataset)
