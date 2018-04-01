@@ -19,11 +19,11 @@ WHITE = '\033[37;0m'
 def log(status, text):
     text = str(text)
     if status == 'err':
-        print(RED + '[ ERROR ]\t' + text + WHITE)
+        print(RED + '[ ERROR\t]________' + text + WHITE)
     elif status == 'warn':
-        print(YELLOW + '[ WARN ]\t' + text + WHITE)
+        print(YELLOW + '[ WARN\t]________' + text + WHITE)
     elif status == 'info':
-        print(CYAN + '[ INFO ]\t' + text + WHITE)
+        print(CYAN + '[ INFO\t]________' + text + WHITE)
     else:
         print(text)
     return
@@ -33,10 +33,10 @@ def clog(status, camera, text):
     text = str(text)
     camera = str(camera)
     if status == 'err':
-        print(RED + '[ ' + camera + '\t]\t' + text + WHITE)
+        print(RED + '[ ' + camera + '\t]________' + text + WHITE)
     elif status == 'warn':
-        print(YELLOW + '[ ' + camera + '\t]\t' + text + WHITE)
+        print(YELLOW + '[ ' + camera + '\t]________' + text + WHITE)
     elif status == 'info':
-        print(CYAN + '[ ' + camera + '\t]\t' + text + WHITE)
+        print(CYAN + '[ ' + camera + '\t]________' + text + WHITE)
     else:
         print(text)

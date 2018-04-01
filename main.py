@@ -10,7 +10,7 @@ from logger import *
 from random import *
 import string
 
-interval = 0.5
+interval = 1
 
 lobby_cap = base.VideoReader('data/market.mp4',interval)
 hotel_cap = base.VideoReader('data/crowd.mp4',interval)
