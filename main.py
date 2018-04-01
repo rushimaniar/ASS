@@ -10,15 +10,22 @@ from logger import *
 from random import *
 import string
 
-vid = base.VideoReader('data/crowd.mp4',0.5)
+interval = 1
 
-yolo_c = base.Y_Classifier('cfg/yolov3.cfg','cfg/coco.data','yolov3.weights',1.5)
+vid = base.VideoReader('data/crowd.mp4',interval)
+
+yolo_c = base.Y_Classifier('cfg/yolov3.cfg','cfg/coco.data','yolov3.weights',interval)
 yolo_c.loadClassifier()
-mob = rules.MobGatheringRule(0.5)
+mob = rules.MobGatheringRule(interval)
+
+dataset = []
 
 while True:
     frame = vid.next()
     if frame is False:
         break
     r = yolo_c.detect(frame)
+    # dataset.append(r)
     mob.eval(r)
+
+# mob.learn(dataset)

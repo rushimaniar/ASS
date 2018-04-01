@@ -6,8 +6,8 @@ class MobGatheringRule(Rule):
     def __init__(self, interval):
         # Ruleset.
         self.RULE_SET = {
-            'person_count':4,
-            'seconds':5
+            'person_count':9,
+            'seconds':3
             }
         # Number of positively matched frames.
         self.POS_FRAMES = 0
@@ -15,6 +15,11 @@ class MobGatheringRule(Rule):
         self.INTERVAL = interval
         # In number of frames
         self.THRESHOLD = int(self.RULE_SET['seconds'] / interval)
+
+        # Learning inits
+        self.PERSONS = 0
+        self.TUPLES = 0
+
 
     def _countPersons(self, y_result):
         i = 0
@@ -37,6 +42,11 @@ class MobGatheringRule(Rule):
         else:
             return False
 
-    def learn(self):
-        log(INFO, "Commencing Learning.")
+    def learn(self, dataset):
+        for data in dataset:
+            self.PERSONS += self._countPersons(data)
+        log(INFO,self.PERSONS)
+        log(INFO,len(dataset))
+        count = int(self.PERSONS / len(dataset))
+        log(WARN, "New threshold for mob: "+str(count))
         return

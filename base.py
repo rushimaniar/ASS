@@ -75,7 +75,8 @@ class VideoReader:
         # Okay! New pivot. Marshalling an opencv frame to YOLO is a pain so what we will be doing is taking a very inefficient approach :).
         # This method will get the next pertinent frame and then instead of calling DN it wil save it in tmp directory.
         # The frame will be retrieved by Y_Classifier object and classified and then deleted. Simple :).
-        self.SEEK += self.INTERVAL
+        self.SEEK += int(self.INTERVAL*self.FRAMERATE)
+        log(INFO,"SEEK: " + str(self.SEEK))
         if self.SEEK > self.FR_COUNT:
             return False
         else:
