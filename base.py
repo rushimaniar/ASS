@@ -33,23 +33,42 @@ class Y_Classifier:
 
 class VideoReader:
     
-    def __init__(self, fr, video):
-        self.FRAMERATE = fr
+    def __init__(self, video, interval):
+        # Path to Video
         self.VIDEO = video
         self.SEEK = 0
+        # In seconds? Okay.
+        self.INTERVAL = interval
+        self.initCV()
 
     def initCV(self):
         # Initialize OpenCV for video
+        self.CAP = cv2.VideoCapture(self.VIDEO)
+        self.FRAMERATE = self.CAP.get(cv2.CAP_PROP_FPS)
+        self.FR_COUNT = int(self.CAP.get(cv2.CAP_PROP_FRAME_COUNT))
+        self.INCR_FR = int(self.FRAMERATE*self.INTERVAL)
         return
 
-    def emitFrame(self, seek):
-        # Math
-        # If seek is None, get next interval.
-        return
+    # "Private" Function. Thank you Python (-_-')
+    def _emitFrame(self, seek):
+        # Get next frame based on the interaval
+        self.CAP.set(cv2.CAP_PROP_POS_FRAMES, seek)
+        ret, frame = self.CAP.read()
+        if ret:
+            return frame
+        else:
+            return False
 
     def next(self):
         # Invoke emitFrame with added SEEK
-        return
+        # Check for frame out of index here, not in the emitFrame method.
+        self.SEEK += self.INTERVAL
+        if self.SEEK > self.FR_COUNT:
+            return False
+        else:
+            frame = self._emitFrame(self.SEEK)
+
+        return frame
 
 
 # Class has to be inherited and its methods are to be treated as interfaces for each rule
