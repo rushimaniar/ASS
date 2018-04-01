@@ -16,6 +16,7 @@ from logger import *
 from random import *
 import string
 import os
+import threading
 
 class Y_Classifier:
 
@@ -35,7 +36,7 @@ class Y_Classifier:
     def detect(self, frame):
         frame = 'tmp/' + frame
         im = darknet.load_image(frame, 0, 0)
-        r = darknet.detect(self.NET, self.META, frame)
+        r = darknet.detect(self.NET, self.META, frame, thresh=self.THRESH)
         os.remove(frame)
         return r
 
@@ -76,7 +77,7 @@ class VideoReader:
         # This method will get the next pertinent frame and then instead of calling DN it wil save it in tmp directory.
         # The frame will be retrieved by Y_Classifier object and classified and then deleted. Simple :).
         self.SEEK += int(self.INTERVAL*self.FRAMERATE)
-        log(INFO,"SEEK: " + str(self.SEEK))
+        # log(INFO,"SEEK: " + str(self.SEEK))
         if self.SEEK > self.FR_COUNT:
             return False
         else:
@@ -90,10 +91,12 @@ class VideoReader:
 # Base class for all rules
 class Rule:
 
-    def __init__(self, name, ruleset={}):
+    def __init__(self, name, ruleset={}, camera = 0):
         self.RULE_NAME = name
         self.RULESET = ruleset
+        self.CAMERA = camera
         log(INFO, "Applying rule: " + self.RULE_NAME)
+
 
     def eval(self):
         # Write Evaluation logic
@@ -104,17 +107,33 @@ class Rule:
         pass
 
 # Driver class, one per camera. One thread per instance
-class ASurveillance:
+class ASurveillance(threading.Thread):
 
     def __init__(self, name, capture, y_classifier, rule):
+        threading.Thread.__init__(self)
         self.NAME = name
         # VideoReader Object
-        self.VIDEO = videoReader
+        self.VIDEO = capture
         # YOLO Classifier Object
         self.Y_CLASSIFIER = y_classifier
         # Rule object
         self.RULE = rule
+        self.RULE.INTERVAL = self.VIDEO.INTERVAL
+        self.RULE.CAMERA = name
 
-    def start(self):
+    def run(self):
         # Logic for performing surveillance based on data given.
+        # Soch raha tha, self learning model daal dete hain.
+        dataset = []
+        while True:
+            if len(dataset) > 10:
+                self.RULE.learn(dataset)
+                dataset[:] = []
+            frame = self.VIDEO.next()
+            if frame is False:
+                break
+            r = self.Y_CLASSIFIER.detect(frame)
+            self.RULE.eval(r)
+            dataset.append(r)
+
         return

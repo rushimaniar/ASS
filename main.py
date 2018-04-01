@@ -10,22 +10,17 @@ from logger import *
 from random import *
 import string
 
-interval = 1
+interval = 0.5
 
-vid = base.VideoReader('data/crowd.mp4',interval)
+lobby_cap = base.VideoReader('data/market.mp4',interval)
+hotel_cap = base.VideoReader('data/crowd.mp4',interval)
 
-yolo_c = base.Y_Classifier('cfg/yolov3.cfg','cfg/coco.data','yolov3.weights',interval)
+yolo_c = base.Y_Classifier('cfg/yolov3.cfg','cfg/coco.data','yolov3.weights',0.5)
 yolo_c.loadClassifier()
-mob = rules.MobGatheringRule(interval)
 
-dataset = []
+lobby = base.ASurveillance("Lobby", lobby_cap, yolo_c, rules.MobGatheringRule(interval))
+hall = base.ASurveillance("Hall", hotel_cap, yolo_c, rules.MobGatheringRule(interval))
 
-while True:
-    frame = vid.next()
-    if frame is False:
-        break
-    r = yolo_c.detect(frame)
-    dataset.append(r)
-    mob.eval(r)
 
-mob.learn(dataset)
+lobby.start()
+hall.start()

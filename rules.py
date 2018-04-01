@@ -1,5 +1,5 @@
 from base import Rule
-from logger import log, WARN, ERROR, INFO
+from logger import *
 
 class MobGatheringRule(Rule):
 
@@ -7,7 +7,7 @@ class MobGatheringRule(Rule):
         # Ruleset.
         self.RULE_SET = {
             'person_count':5,
-            'seconds':3
+            'seconds':2
             }
         # Number of positively matched frames.
         self.POS_FRAMES = 0
@@ -29,22 +29,30 @@ class MobGatheringRule(Rule):
         return i 
 
     def eval(self, y_result):
+        # log(WARN,self.INTERVAL)
         # If the last (interval*seconds) frames contain more than the specified person count, alert.
         persons = self._countPersons(y_result)
+        clog(INFO, self.CAMERA,"Number of persons: " + str(persons))
+        # log(WARN,persons)
         if persons > self.RULE_SET['person_count']:
             self.POS_FRAMES += 1
         else:
             self.POS_FRAMES = 0
 
-        if self.POS_FRAMES > self.THRESHOLD:
-            log(ERROR, "Mob Detected")
+        if self.POS_FRAMES >= self.THRESHOLD:
+            clog(ERROR, self.CAMERA,  "Mob Detected")
             return True
         else:
             return False
 
     def learn(self, dataset):
+        clog(WARN, self.CAMERA, "Beginning training cycle....")
         for data in dataset:
-            self.PERSONS += self._countPersons(data)
-        self.RULE_SET['persons'] = int(self.PERSONS / len(dataset))
-        log(WARN, "New threshold for mob: "+str(self.RULE_SET['persons']))
+            count = self._countPersons(data)
+            self.PERSONS += count
+            if count != 0:
+                self.TUPLES += 1
+        if self.PERSONS != 0 and self.TUPLES != 0:
+            self.RULE_SET['person_count'] = int(self.PERSONS / self.TUPLES)
+        clog(WARN, self.CAMERA, "New threshold for mob: "+str(self.RULE_SET['person_count']))
         return
