@@ -12,7 +12,6 @@ Left luggage ka baadme dekh lenge ab. Kuch nahi toh HAAR karenge. Else, we will 
 '''
 import darknet
 import cv2
-import numpy as np
 
 class Y_Classifier:
 
@@ -43,11 +42,12 @@ class VideoReader:
         # Initialize OpenCV for video
         return
 
-    def emitFrame(self, seek=self.SEEK):
-        ## Math
+    def emitFrame(self, seek):
+        # Math
+        # If seek is None, get next interval.
         return
 
-    def next(self)
+    def next(self):
         # Invoke emitFrame with added SEEK
         return
 
@@ -81,3 +81,4 @@ class ASurveillance:
 
     def start(self):
         # Logic for performing surveillance based on data given.
+        return
