@@ -12,7 +12,10 @@ Left luggage ka baadme dekh lenge ab. Kuch nahi toh HAAR karenge. Else, we will 
 '''
 import darknet
 import cv2
-from logger import log, WARN, INFO, ERROR
+from logger import *
+from random import *
+import string
+import os
 
 class Y_Classifier:
 
@@ -31,7 +34,9 @@ class Y_Classifier:
 
     def detect(self, frame):
         im = darknet.load_image(frame, 0, 0)
-        return darknet.detect(self.NET, self.META, frame)
+        r = darknet.detect(self.NET, self.META, frame)
+        os.remove(frame)
+        return r
 
 
 class VideoReader:
@@ -74,8 +79,10 @@ class VideoReader:
             return False
         else:
             frame = self._emitFrame(self.SEEK)
-            cv2.imsave()
-        return frame
+            name = ''.join(choice(string.ascii_letters) for x in range(0, 10))
+            name += '.jpg'
+            cv2.imwrite('tmp/' + name, frame)
+        return name
 
 
 # Base class for all rules
