@@ -15,8 +15,7 @@ import cv2
 from logger import *
 from random import *
 import string
-import os
-import threading
+import os, sys
 
 class Y_Classifier:
 
@@ -34,6 +33,7 @@ class Y_Classifier:
         return
 
     def detect(self, frame):
+        dlog(WARN, "DETECTING")
         frame = 'tmp/' + frame
         im = darknet.load_image(frame, 0, 0)
         r = darknet.detect(self.NET, self.META, frame, thresh=self.THRESH)
@@ -107,10 +107,9 @@ class Rule:
         pass
 
 # Driver class, one per camera. One thread per instance
-class ASurveillance(threading.Thread):
+class ASurveillance():
 
     def __init__(self, name, capture, y_classifier, rule):
-        threading.Thread.__init__(self)
         self.NAME = name
         # VideoReader Object
         self.VIDEO = capture
@@ -125,24 +124,22 @@ class ASurveillance(threading.Thread):
         # Logic for performing surveillance based on data given.
         # Soch raha tha, self learning model daal dete hain.
         dataset = []
+        dlog(INFO, self.Y_CLASSIFIER)
+        dlog(INFO, os.getpid())
         while True:
+            dlog(INFO, "IN LOOP.")
             if len(dataset) > 10:
+                dlog(INFO, "LEARNING")
                 self.RULE.learn(dataset)
                 dataset[:] = []
             frame = self.VIDEO.next()
+            dlog(INFO, "GOT FRAME" + str(frame))
             if frame is False:
                 break
+            dlog(INFO, "CALLING DETECT")
             r = self.Y_CLASSIFIER.detect(frame)
+            dlog(INFO, r)
             self.RULE.eval(r)
             dataset.append(r)
 
-        return
-
-class multi:
-    def __init__(self, procname, procstring):
-        self.PROC_NAME = procname
-        self.PROC_STRING = procstring
-
-    def talk(self):
-        log(INFO, self.PROC_NAME + ":\t" + self.PROC_STRING)
         return

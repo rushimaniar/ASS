@@ -13,6 +13,8 @@ RED = '\033[31;1m'
 YELLOW ='\033[33m' 
 CYAN = '\033[36m'
 WHITE = '\033[37;0m'
+
+DEBUG = True
     
 
 # General Log
@@ -40,3 +42,9 @@ def clog(status, camera, text):
         print(CYAN + '[ ' + camera + '\t]________' + text + WHITE)
     else:
         print(text)
+
+def dlog(status, text):
+    if DEBUG is True:
+        log(status, text)
+    else:
+        return
