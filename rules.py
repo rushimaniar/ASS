@@ -34,7 +34,7 @@ class MobGatheringRule(Rule):
         persons = self._countPersons(y_result)
         clog(INFO, self.CAMERA,"Number of persons: " + str(persons))
         # log(WARN,persons)
-        if persons > self.RULE_SET['person_count']:
+        if persons >= self.RULE_SET['person_count']:
             self.POS_FRAMES += 1
         else:
             self.POS_FRAMES = 0

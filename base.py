@@ -137,3 +137,12 @@ class ASurveillance(threading.Thread):
             dataset.append(r)
 
         return
+
+class multi:
+    def __init__(self, procname, procstring):
+        self.PROC_NAME = procname
+        self.PROC_STRING = procstring
+
+    def talk(self):
+        log(INFO, self.PROC_NAME + ":\t" + self.PROC_STRING)
+        return
