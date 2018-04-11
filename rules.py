@@ -159,7 +159,7 @@ class AreaIntrusion(Rule):
     def __init__(self, interval):
         Rule.__init__(self, "Intrusion Detection Rule")
         self.RULE_SET = {
-            'x_pos' : 400,
+            'x_pos' : 600,
             'y_pos' : 400
         }
 

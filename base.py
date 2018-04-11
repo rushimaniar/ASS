@@ -17,6 +17,8 @@ from random import *
 import string
 import os
 import threading
+import time
+import subprocess
 
 class Y_Classifier:
 
@@ -37,8 +39,12 @@ class Y_Classifier:
         frame = 'tmp/' + frame
         im = darknet.load_image(frame, 0, 0)
         r = darknet.detect(self.NET, self.META, frame, thresh=self.THRESH)
-        os.remove(frame)
         return r
+
+    def clean(self, frame):
+        frame = 'tmp/' + frame
+        os.remove(frame)
+        return
 
 
 class VideoReader:
@@ -95,7 +101,7 @@ It will first check if there is any feh instances and then kill them just to ope
 Oh, remember to add this on another thread, it sleeps.
 '''
 def view(frame, title='Frame', timeout=1):
-    check = subprocess.Popen(['ps',['-a']], stdout=subprocess.PIPE)
+    check = subprocess.Popen(['ps','-a'], stdout=subprocess.PIPE)
     ps = check.communicate()[0]
     if 'feh' in ps:
         subprocess.Popen(['killall','-s','KILL','feh'])
@@ -148,7 +154,10 @@ class ASurveillance(threading.Thread):
             if frame is False:
                 break
             r = self.Y_CLASSIFIER.detect(frame)
-            self.RULE.eval(r)
+            if self.RULE.eval(r) is True:
+                view_thread = threading.Thread(target=view, args=('tmp/' + frame,), kwargs={'title':self.NAME, 'timeout':0.5})
+                view_thread.run()
+            self.Y_CLASSIFIER.clean(frame)
             dataset.append(r)
 
         return
