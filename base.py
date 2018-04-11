@@ -62,7 +62,10 @@ class VideoReader:
     # "Private" Function. Thank you Python (-_-')
     def _emitFrame(self, seek):
         # Get next frame based on the interaval
+        dlog(INFO, "IN EMIT FRAME")
+        dlog(INFO, seek)
         self.CAP.set(cv2.CAP_PROP_POS_FRAMES, seek)
+        dlog(INFO, "GOT FRAME")
         ret, frame = self.CAP.read()
         if ret:
             return frame
@@ -76,15 +79,19 @@ class VideoReader:
         # Okay! New pivot. Marshalling an opencv frame to YOLO is a pain so what we will be doing is taking a very inefficient approach :).
         # This method will get the next pertinent frame and then instead of calling DN it wil save it in tmp directory.
         # The frame will be retrieved by Y_Classifier object and classified and then deleted. Simple :).
+        dlog(INFO, "GETTING NEXT FRAME")
         self.SEEK += int(self.INTERVAL*self.FRAMERATE)
         # log(INFO,"SEEK: " + str(self.SEEK))
         if self.SEEK > self.FR_COUNT:
+            dlog(INFO, "RETURNIN FALSE")
             return False
         else:
+            dlog(INFO, "CALLING EMIT FRAME")
             frame = self._emitFrame(self.SEEK)
             name = ''.join(choice(string.ascii_letters) for x in range(0, 10))
             name += '.jpg'
             cv2.imwrite('tmp/' + name, frame)
+        dlog(INFO, "RETURNING FRAME")
         return name
 
 
