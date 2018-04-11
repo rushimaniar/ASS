@@ -87,6 +87,22 @@ class VideoReader:
             cv2.imwrite('tmp/' + name, frame)
         return name
 
+'''
+This project is riddled with hacks. The following is the biggest one there is.
+The role of the function is to display a frame.
+This is done by using an external utility feh. (add that to dependencies.)
+It will first check if there is any feh instances and then kill them just to open the new instance.
+Oh, remember to add this on another thread, it sleeps.
+'''
+def view(frame, title='Frame', timeout=1):
+    check = subprocess.Popen(['ps',['-a']], stdout=subprocess.PIPE)
+    ps = check.communicate()[0]
+    if 'feh' in ps:
+        subprocess.Popen(['killall','-s','KILL','feh'])
+    feh = subprocess.Popen(['feh','--title',title,frame])
+    time.sleep(timeout)
+    feh.terminate()
+    feh.kill()
 
 # Base class for all rules
 class Rule:
