@@ -43,7 +43,8 @@ class Y_Classifier:
 
     def clean(self, frame):
         frame = 'tmp/' + frame
-        os.remove(frame)
+        if os.path.exists(frame):
+            os.remove(frame)
         return
 
 
@@ -130,7 +131,7 @@ class Rule:
 # Driver class, one per camera. One thread per instance
 class ASurveillance(threading.Thread):
 
-    def __init__(self, name, capture, y_classifier, rule):
+    def __init__(self, name, capture, y_classifier, rules):
         threading.Thread.__init__(self)
         self.NAME = name
         # VideoReader Object
@@ -138,9 +139,10 @@ class ASurveillance(threading.Thread):
         # YOLO Classifier Object
         self.Y_CLASSIFIER = y_classifier
         # Rule object
-        self.RULE = rule
-        self.RULE.INTERVAL = self.VIDEO.INTERVAL
-        self.RULE.CAMERA = name
+        self.RULES = rules
+        for rule in self.RULES:
+            rule.INTERVAL = self.VIDEO.INTERVAL
+            rule.CAMERA = name
 
     def run(self):
         # Logic for performing surveillance based on data given.
@@ -148,16 +150,18 @@ class ASurveillance(threading.Thread):
         dataset = []
         while True:
             if len(dataset) > 10:
-                self.RULE.train(dataset)
+                for rule in self.RULES:
+                    rule.train(dataset)
                 dataset[:] = []
             frame = self.VIDEO.next()
             if frame is False:
                 break
             r = self.Y_CLASSIFIER.detect(frame)
-            if self.RULE.eval(r) is True:
-                view_thread = threading.Thread(target=view, args=('tmp/' + frame,), kwargs={'title':self.NAME, 'timeout':0.5})
-                view_thread.run()
-            self.Y_CLASSIFIER.clean(frame)
+            for rule in self.RULES:
+                if rule.eval(r) is True:
+                    view_thread = threading.Thread(target=view, args=('tmp/' + frame,), kwargs={'title':self.NAME, 'timeout':0.5})
+                    view_thread.run()
+                self.Y_CLASSIFIER.clean(frame)
             dataset.append(r)
 
         return

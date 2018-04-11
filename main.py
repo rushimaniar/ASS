@@ -19,7 +19,7 @@ yolo_c = base.Y_Classifier('cfg/yolov3.cfg','cfg/coco.data','yolov3.weights',0.5
 yolo_c.loadClassifier()
 
 # lobby = base.ASurveillance("Lobby", lobby_cap, yolo_c, rules.MobGatheringRule(interval))
-hall = base.ASurveillance("Hall", hotel_cap, yolo_c, rules.AreaIntrusion(interval))
+hall = base.ASurveillance("Hall", hotel_cap, yolo_c, [rules.AreaIntrusion(interval), rules.MobGatheringRule(interval)])
 
 
 # lobby.start()
