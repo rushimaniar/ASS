@@ -91,9 +91,8 @@ class VideoReader:
 # Base class for all rules
 class Rule:
 
-    def __init__(self, name, ruleset={}, camera = 0):
+    def __init__(self, name, camera = 'cam'):
         self.RULE_NAME = name
-        self.RULESET = ruleset
         self.CAMERA = camera
         log(INFO, "Applying rule: " + self.RULE_NAME)
 

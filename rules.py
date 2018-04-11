@@ -4,6 +4,7 @@ from logger import *
 class MobGatheringRule(Rule):
 
     def __init__(self, interval):
+        Rule.__init__(self,'Mob Gathering Rule')
         # Ruleset.
         self.RULE_SET = {
             'person_count':5,
@@ -12,7 +13,6 @@ class MobGatheringRule(Rule):
             }
         # Number of positively matched frames.
         self.POS_FRAMES = 0
-        Rule.__init__(self,'Mob Gathering Rule', self.RULE_SET)
         self.INTERVAL = interval
         # In number of frames
         self.THRESHOLD = int(self.RULE_SET['seconds'] / interval)
@@ -20,7 +20,6 @@ class MobGatheringRule(Rule):
         # Learning inits
         self.PERSONS = 0
         self.TUPLES = 0
-
 
     def _countPersons(self, y_result):
         i = 0
@@ -58,4 +57,51 @@ class MobGatheringRule(Rule):
             if self.RULE_SET['person_count'] < self.RULE_SET['min_persons']:
                 self.RULE_SET['person_count'] = self.RULE_SET['min_persons']
         clog(WARN, self.CAMERA, "New threshold for mob: "+str(self.RULE_SET['person_count']))
+        return
+
+class LeftLuggageRule(Rule):
+    def __init__(self, interval):
+        Rule.__init__(self,'Left Luggage Rule')
+        self.RULE_SET = {
+            'luggage_count':0,
+            'max_time':10
+        }
+        self.INTERVAL = interval
+        self.POS_FRAMES = 0
+        self.THRESHOLD = int(self.RULE_SET['max_time'] / interval)
+
+    def _countLuggage(self, y_result):
+        count = 0
+        for result in y_result:
+            if result[0] == 'handbag':
+                count += 1
+            elif result[0] == 'backpack':
+                count += 1
+            elif result[0] == 'suitcase':
+                count +=1
+        return count
+
+    def eval(self, y_result):
+        count = self._countLuggage(y_result)
+        clog(INFO, self.CAMERA, "Number of Luggage Objects: " + str(count))
+
+        # If no luggage detected.
+        if count == 0:
+            self.RULE_SET['luggage_count'] = 0
+            self.POS_FRAMES = 0
+            return
+
+        # If luggage count has changed, one of the luggage has been taken away.
+        elif count != self.RULE_SET['luggage_count']:
+            self.RULE_SET['luggage_count'] = count
+            self.POS_FRAMES = 0
+        
+        elif count == self.RULE_SET['luggage_count']:
+            self.POS_FRAMES += 1
+            if self.POS_FRAMES > self.THRESHOLD:
+                clog(ERROR, self.CAMERA, "Forgotten luggage detected.")
+
+        return
+
+    def learn(self, y_result):
         return
