@@ -107,7 +107,7 @@ class ParkingCarsUtilityRule(Rule):
     def __init__(self, interval):
         Rule.__init__(self, "Parking cars counting utility.")
         self.RULE_SET = {
-            'max_cars' : 15
+            'max_cars' : 30
         }
         self.CURRENT_CARS = 0
 
@@ -140,10 +140,11 @@ class ParkingCarsUtilityRule(Rule):
             - If there is a goddamn truck in the hotel parking lot. That is not correct. No sir. Or a bus or a train too.
         '''
         count = self._countVehicles(y_result)
+        clog(INFO, self.CAMERA, "Count of vehicles: " + str(count))
         if count is False:
             clog(ERROR, self.CAMERA, "Illegal Vehicle Detected.")
             return True
-        elif count > self.RULE_SET['max_cars']:
+        elif count >= self.RULE_SET['max_cars']:
             self.CURRENT_CARS = count
             clog(ERROR, self.CAMERA, "Vehicle Limit Exceeded.")
             return True
