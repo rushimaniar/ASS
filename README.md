@@ -13,7 +13,7 @@ The following phases are involved in its working:
 
 # Usage
 ```main.py --video path/to/feed --rules <rules> --camera <camera_name> --debug-levels <A,D,R,C>```
-m
+<br>
 Additionally, the `--list` arguement can be used to list all the available rules.
 
 # Dependencies
