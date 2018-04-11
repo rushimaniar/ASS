@@ -70,6 +70,7 @@ class LeftLuggageRule(Rule):
         self.THRESHOLD = int(self.RULE_SET['max_time'] / interval)
 
     def _countLuggage(self, y_result):
+        # Ladders are more readable than combined logic. Change my mind.
         count = 0
         for result in y_result:
             if result[0] == 'handbag':
@@ -99,4 +100,55 @@ class LeftLuggageRule(Rule):
             return False
 
     def learn(self, y_result):
+        # No Training. Static Rule.
+        return
+
+class ParkingCarsUtilityRule(Rule):
+    def __init__(self, interval):
+        Rule.__init__(self, "Parking cars counting utility.")
+        self.RULE_SET = {
+            'max_cars' : 15
+        }
+        self.CURRENT_CARS = 0
+
+    def _countVehicles(self, y_result):
+        # Count vehicles, if it finds illegal vehicles straight return false.
+        # Ladders are more readable than combined logic. Change my mind.
+        count = 0
+        for result in y_result:
+            if result[0] == 'truck':
+                return False
+            if result[0] == 'bus':
+                return False
+            if result[0] == 'train':
+                return False
+
+            # The legal vehicles
+            if result[0] == 'car':
+                count += 1
+            if result[0] == 'bicycle':
+                count += 1
+            if result[0] == 'motorbike':
+                count += 1
+        return count
+
+    def eval(self, y_result):
+        '''
+        Two Triggering Rules:
+            - If there are more cars than there should be.
+            - If there is a goddamn truck in the hotel parking lot. That is not correct. No sir. Or a bus or a train too.
+        '''
+        count = self._countVehicles(y_result)
+        if count is False:
+            clog(ERROR, self.CAMERA, "Illegal Vehicle Detected.")
+            return True
+        elif count > self.RULE_SET['max_cars']:
+            self.CURRENT_CARS = count
+            clog(ERROR, self.CAMERA, "Vehicle Limit Exceeded.")
+            return True
+
+        return False
+
+    def train(self, y_result):
+        # No training. Static Rule.
         return

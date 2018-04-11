@@ -98,7 +98,7 @@ class Rule:
 
 
     def eval(self):
-        # Write Evaluation logic
+        # Write Evaluation logic. Return true if triggered.
         pass
 
     def learn(self):
