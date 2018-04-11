@@ -101,7 +101,7 @@ class Rule:
         # Write Evaluation logic. Return true if triggered.
         pass
 
-    def learn(self):
+    def train(self):
         # Write Learning logic
         pass
 
@@ -126,7 +126,7 @@ class ASurveillance(threading.Thread):
         dataset = []
         while True:
             if len(dataset) > 10:
-                self.RULE.learn(dataset)
+                self.RULE.train(dataset)
                 dataset[:] = []
             frame = self.VIDEO.next()
             if frame is False:

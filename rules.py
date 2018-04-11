@@ -45,7 +45,7 @@ class MobGatheringRule(Rule):
         else:
             return False
 
-    def learn(self, dataset):
+    def train(self, dataset):
         clog(WARN, self.CAMERA, "Beginning training cycle....")
         for data in dataset:
             count = self._countPersons(data)
@@ -99,7 +99,7 @@ class LeftLuggageRule(Rule):
                 return True
             return False
 
-    def learn(self, y_result):
+    def train(self, y_result):
         # No Training. Static Rule.
         return
 
@@ -113,6 +113,7 @@ class ParkingCarsUtilityRule(Rule):
 
     def _countVehicles(self, y_result):
         # Count vehicles, if it finds illegal vehicles straight return false.
+        #
         # Ladders are more readable than combined logic. Change my mind.
         count = 0
         for result in y_result:
@@ -151,4 +152,26 @@ class ParkingCarsUtilityRule(Rule):
 
     def train(self, y_result):
         # No training. Static Rule.
+        return
+
+class AreaIntrusion(Rule):
+    def __init__(self, interval):
+        Rule.__init__(self, "Intrusion Detection Rule")
+        self.RULE_SET = {
+            'x_pos' : 400,
+            'y_pos' : 400
+        }
+
+    def eval(self, y_result):
+        # Laddersssss
+        for result in y_result:
+            if result[0] == 'person':
+                clog(INFO, self.CAMERA, "Person Detected")
+                if result[2][0] >= self.RULE_SET['x_pos']:
+                    if result[2][0] >= self.RULE_SET['y_pos']:
+                        clog(ERROR, self.CAMERA, "Intrusion detected.")
+        return
+
+    def train(self, y_result):
+        # No training. Static rule.
         return

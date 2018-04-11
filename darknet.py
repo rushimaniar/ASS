@@ -150,5 +150,7 @@ def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
 if __name__ == "__main__":
     net = load_net("cfg/yolov3.cfg", "yolov3.weights", 0)
     meta = load_meta("cfg/coco.data")
-    r = detect(net, meta, "../darknet/data/lol1.jpg")
-    print r
+    rs = detect(net, meta, "../darknet/data/dog.jpg")
+    for r in rs:
+        print r[2][0]   # X
+        print r[2][1]   # Y
