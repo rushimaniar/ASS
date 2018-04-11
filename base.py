@@ -161,7 +161,7 @@ class ASurveillance(threading.Thread):
                 if rule.eval(r) is True:
                     view_thread = threading.Thread(target=view, args=('tmp/' + frame,), kwargs={'title':self.NAME, 'timeout':0.5})
                     view_thread.run()
-                self.Y_CLASSIFIER.clean(frame)
+            self.Y_CLASSIFIER.clean(frame)
             dataset.append(r)
 
         return

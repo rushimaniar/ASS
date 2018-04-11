@@ -32,7 +32,7 @@ class MobGatheringRule(Rule):
         # log(WARN,self.INTERVAL)
         # If the last (interval*seconds) frames contain more than the specified person count, alert.
         persons = self._countPersons(y_result)
-        clog(INFO, self.CAMERA,"Number of persons: " + str(persons))
+        rlog(INFO, self.CAMERA, self.__class__.__name__,"Number of persons: " + str(persons))
         # log(WARN,persons)
         if persons > self.RULE_SET['person_count']:
             self.POS_FRAMES += 1
@@ -46,7 +46,7 @@ class MobGatheringRule(Rule):
             return False
 
     def train(self, dataset):
-        clog(WARN, self.CAMERA, "Beginning training cycle....")
+        rlog(WARN, self.CAMERA, self.__class__.__name__, "Beginning training cycle....")
         for data in dataset:
             count = self._countPersons(data)
             self.PERSONS += count
@@ -83,7 +83,7 @@ class LeftLuggageRule(Rule):
 
     def eval(self, y_result):
         count = self._countLuggage(y_result)
-        clog(INFO, self.CAMERA, "Number of Luggage Objects: " + str(count))
+        rlog(INFO, self.CAMERA, self.__class__.__name__, "Number of Luggage Objects: " + str(count))
 
         # If no luggage detected.
         if count == 0:
@@ -140,7 +140,7 @@ class ParkingCarsUtilityRule(Rule):
             - If there is a goddamn truck in the hotel parking lot. That is not correct. No sir. Or a bus or a train too.
         '''
         count = self._countVehicles(y_result)
-        clog(INFO, self.CAMERA, "Count of vehicles: " + str(count))
+        rlog(INFO, self.CAMERA, self.__class__.__name__, "Count of vehicles: " + str(count))
         if count is False:
             clog(ERROR, self.CAMERA, "Illegal Vehicle Detected.")
             return True
@@ -167,7 +167,7 @@ class AreaIntrusion(Rule):
         # Laddersssss
         for result in y_result:
             if result[0] == 'person':
-                clog(INFO, self.CAMERA, "Person Detected")
+                rlog(INFO, self.CAMERA, self.__class__.__name__, "Person Detected")
                 if result[2][0] >= self.RULE_SET['x_pos']:
                     if result[2][0] >= self.RULE_SET['y_pos']:
                         clog(ERROR, self.CAMERA, "Intrusion detected.")
