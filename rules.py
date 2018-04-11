@@ -63,7 +63,6 @@ class LeftLuggageRule(Rule):
     def __init__(self, interval):
         Rule.__init__(self,'Left Luggage Rule')
         self.RULE_SET = {
-            'luggage_count':0,
             'max_time':10
         }
         self.INTERVAL = interval
@@ -87,21 +86,17 @@ class LeftLuggageRule(Rule):
 
         # If no luggage detected.
         if count == 0:
-            self.RULE_SET['luggage_count'] = 0
             self.POS_FRAMES = 0
-            return
+            return False
 
-        # If luggage count has changed, one of the luggage has been taken away.
-        elif count != self.RULE_SET['luggage_count']:
-            self.RULE_SET['luggage_count'] = count
-            self.POS_FRAMES = 0
-        
-        elif count == self.RULE_SET['luggage_count']:
+        # If Stagnant Luggage.
+        else:
             self.POS_FRAMES += 1
-            if self.POS_FRAMES > self.THRESHOLD:
-                clog(ERROR, self.CAMERA, "Forgotten luggage detected.")
-
-        return
+            if self.POS_FRAMES >= self.THRESHOLD:
+                clog(ERROR, self.CAMERA, "Stagnant Luggage Detected.")
+                # Write Callback code here.
+                return True
+            return False
 
     def learn(self, y_result):
         return
