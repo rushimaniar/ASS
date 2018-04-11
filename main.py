@@ -23,4 +23,4 @@ hall = base.ASurveillance("Hall", hotel_cap, yolo_c, rules.MobGatheringRule(inte
 
 
 # lobby.start()
-hall.start()
+hall.start() 
