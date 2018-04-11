@@ -7,7 +7,8 @@ class MobGatheringRule(Rule):
         # Ruleset.
         self.RULE_SET = {
             'person_count':5,
-            'seconds':2
+            'seconds':2,
+            'min_persons': 4
             }
         # Number of positively matched frames.
         self.POS_FRAMES = 0
@@ -54,5 +55,7 @@ class MobGatheringRule(Rule):
                 self.TUPLES += 1
         if self.PERSONS != 0 and self.TUPLES != 0:
             self.RULE_SET['person_count'] = int(self.PERSONS / self.TUPLES)
+            if self.RULE_SET['person_count'] < self.RULE_SET['min_persons']:
+                self.RULE_SET['person_count'] = self.RULE_SET['min_persons']
         clog(WARN, self.CAMERA, "New threshold for mob: "+str(self.RULE_SET['person_count']))
         return
