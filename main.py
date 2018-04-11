@@ -13,26 +13,9 @@ from random import *
 import string
 from multiprocessing import Process, Lock, log_to_stderr
 import logging
+import subprocess
 
-interval = 0.5
+check = subprocess.Popen(['ps','-a'], stdout=subprocess.PIPE)
+lol = check.communicate()[0]
 
-lobby_cap = base.VideoReader('data/crowd.mp4',interval)
-hotel_cap = base.VideoReader('data/crowd2.mp4',interval)
-
-yolo_c = base.Y_Classifier('cfg/yolov3.cfg','cfg/coco.data','yolov3.weights',0.5)
-yolo_c.loadClassifier()
-
-
-mpl = log_to_stderr()
-mpl.setLevel(logging.DEBUG)
-lobby = base.ASurveillance("Lobby", lobby_cap, yolo_c, rules.MobGatheringRule(interval))
-hall = base.ASurveillance("Hall", hotel_cap, yolo_c, rules.MobGatheringRule(interval))
-
-lobby_process = Process(target = lobby.run)
-hall_process = Process(target = hall.run)
-
-lobby_process.start()
-hall_process.start()
-
-lobby_process.join()
-hall_process.join()
+kill = subprocess.Popen(['killall','-s','KILL','feh'])
