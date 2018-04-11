@@ -170,7 +170,8 @@ class AreaIntrusion(Rule):
                 if result[2][0] >= self.RULE_SET['x_pos']:
                     if result[2][0] >= self.RULE_SET['y_pos']:
                         clog(ERROR, self.CAMERA, "Intrusion detected.")
-        return
+                        return True
+        return False
 
     def train(self, y_result):
         # No training. Static rule.
