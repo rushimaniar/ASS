@@ -14,9 +14,15 @@ YELLOW ='\033[33m'
 CYAN = '\033[36m'
 WHITE = '\033[37;0m'
     
+DEBUG = False
+R_DEBUG = False
+C_DEBUG = False
+
 
 # General Log
 def log(status, text):
+    if DEBUG is False:
+        return
     text = str(text)
     if status == 'err':
         print(RED + '[ ERROR\t]________' + text + WHITE)
@@ -30,6 +36,8 @@ def log(status, text):
 
 # Camera Log
 def clog(status, camera, text):
+    if C_DEBUG is False:
+        return
     text = str(text)
     camera = str(camera)
     if status == 'err':
@@ -42,6 +50,8 @@ def clog(status, camera, text):
         print(text)
 
 def rlog(status, camera, rule, text):
+    if R_DEBUG is False:
+        return
     text = str(text)
     camera = str(camera)
     if status == 'err':

@@ -1,6 +1,13 @@
 from base import Rule
 from logger import *
 
+RULES = [
+    'MobGatheringRule',
+    'LeftLuggageRule',
+    'AreaIntrusionRule',
+    'ParkingCarsUtilityRule'
+]
+
 class MobGatheringRule(Rule):
 
     def __init__(self, interval):
@@ -155,7 +162,7 @@ class ParkingCarsUtilityRule(Rule):
         # No training. Static Rule.
         return
 
-class AreaIntrusion(Rule):
+class AreaIntrusionRule(Rule):
     def __init__(self, interval):
         Rule.__init__(self, "Intrusion Detection Rule")
         self.RULE_SET = {
