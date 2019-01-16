@@ -1,6 +1,5 @@
 # Automated Surveillance System
 This is our final year project. <br>
-Dated `12th April, 2018`, I declare it to have completed. It will not be developed or supported any longer by me.<br>
 
 The aim of this project is to review surveillance video feeds and based on that determine if the activities going on in the video are anomalous or normal.<br>
 This project is specialized towards Hotels but the underlying core framework can be used in any environment. <br>
